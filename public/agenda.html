@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Agenda Operativa VTC CLASS</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+table{
+width:96%;
+margin:auto;
+border-collapse:collapse;
+background:white;
+color:black;
+}
+
+th,td{
+padding:8px;
+border:1px solid #ccc;
+}
+
+th{
+background:black;
+color:white;
+}
+
+select,input{
+padding:6px;
+margin:6px;
+}
+
+.estado{
+font-weight:bold;
+}
+
+.pendiente{color:orange}
+.asignado{color:blue}
+.finalizado{color:green}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>AGENDA OPERATIVA VTC CLASS</h1>
+
+<input type="date" id="fechaFiltro" onchange="cargar()">
+
+<table id="tabla">
+
+<tr>
+
+<th>Hora</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Cliente</th>
+<th>Teléfono</th>
+<th>Vuelo/Barco/Tren</th>
+<th>Pax</th>
+<th>Hotel</th>
+<th>Precio</th>
+<th>Conductor</th>
+<th>Estado</th>
+
+</tr>
+
+</table>
+
+<script>
+
+let conductores=[
+"Javier",
+"Conductor 2",
+"Conductor 3",
+"Conductor 4"
+]
+
+async function cargar(){
+
+let res = await fetch("/reservas")
+
+let reservas = await res.json()
+
+let fecha=document.getElementById("fechaFiltro").value
+
+let tabla=document.getElementById("tabla")
+
+tabla.innerHTML=`
+
+<tr>
+
+<th>Hora</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Cliente</th>
+<th>Teléfono</th>
+<th>Vuelo/Barco/Tren</th>
+<th>Pax</th>
+<th>Hotel</th>
+<th>Precio</th>
+<th>Conductor</th>
+<th>Estado</th>
+
+</tr>
+`
+
+reservas.forEach(r=>{
+
+if(fecha && r.fecha!=fecha)return
+
+let extra=r.vuelo||r.barco||r.tren||""
+
+let selectConductor=`<select>
+<option></option>
+${conductores.map(c=>`<option>${c}</option>`).join("")}
+</select>`
+
+let selectEstado=`
+
+<select class="estado">
+
+<option class="pendiente">Pendiente</option>
+<option class="asignado">Asignado</option>
+<option class="finalizado">Finalizado</option>
+
+</select>
+
+`
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+
+`<td>${r.hora}</td>
+<td>${r.origen}</td>
+<td>${r.destino}</td>
+<td>${r.cliente}</td>
+<td>${r.telefono}</td>
+<td>${extra}</td>
+<td>${r.pax}</td>
+<td>${r.origen.includes("Hotel")?r.origen:r.destino}</td>
+<td>${r.precio}€</td>
+<td>${selectConductor}</td>
+<td>${selectEstado}</td>`
+
+tabla.appendChild(tr)
+
+})
+
+}
+
+cargar()
+
+</script>
+
+</body>
+
+</html>

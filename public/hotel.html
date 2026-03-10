@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Reservas Hotel Praktik</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+table{
+width:90%;
+margin:auto;
+border-collapse:collapse;
+background:white;
+color:black;
+}
+
+th,td{
+padding:8px;
+border:1px solid #ccc;
+}
+
+th{
+background:black;
+color:white;
+}
+
+select,input{
+padding:6px;
+margin:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>CONSULTA RESERVAS TRANSFER</h2>
+
+<select id="hotel" onchange="cargar()">
+
+<option value="">Seleccionar hotel</option>
+
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Ramblas</option>
+<option>Hotel Praktik Vinoteca</option>
+
+</select>
+
+<input type="date" id="fecha" onchange="cargar()">
+
+<table id="tabla">
+
+<tr>
+
+<th>Día</th>
+<th>Hora</th>
+<th>Nombre</th>
+<th>Pax</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Comisión</th>
+
+</tr>
+
+</table>
+
+<script>
+
+async function cargar(){
+
+let res = await fetch("/reservas")
+let reservas = await res.json()
+
+let hotel=document.getElementById("hotel").value
+let fecha=document.getElementById("fecha").value
+
+let tabla=document.getElementById("tabla")
+
+tabla.innerHTML=`
+
+<tr>
+
+<th>Día</th>
+<th>Hora</th>
+<th>Nombre</th>
+<th>Pax</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Comisión</th>
+
+</tr>
+`
+
+reservas.forEach(r=>{
+
+if(hotel && !r.origen.includes(hotel) && !r.destino.includes(hotel)) return
+if(fecha && r.fecha!=fecha) return
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+
+`<td>${r.fecha}</td>
+<td>${r.hora}</td>
+<td>${r.cliente}</td>
+<td>${r.pax}</td>
+<td>${r.origen}</td>
+<td>${r.destino}</td>
+<td>${r.comision}€</td>`
+
+tabla.appendChild(tr)
+
+})
+
+}
+
+</script>
+
+</body>
+
+</html>

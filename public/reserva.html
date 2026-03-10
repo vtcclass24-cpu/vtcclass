@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Reserva Transfer</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+text-align:center
+}
+
+input,select{
+width:300px;
+padding:10px;
+margin:5px
+}
+
+button{
+padding:12px 30px;
+background:#ffd700;
+border:0;
+font-size:16px
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>RESERVA TRANSFER</h1>
+
+<select id="origen">
+
+<option>Aeropuerto</option>
+<option>Terminal de Cruceros</option>
+<option>Estación de Sants</option>
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Ramblas</option>
+<option>Hotel Praktik Vinoteca</option>
+
+</select>
+
+<br>
+
+<select id="destino">
+
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Ramblas</option>
+<option>Hotel Praktik Vinoteca</option>
+<option>Aeropuerto</option>
+<option>Terminal de Cruceros</option>
+<option>Estación de Sants</option>
+
+</select>
+
+<br>
+
+<input type="date" id="fecha"><br>
+<input type="time" id="hora"><br>
+<input placeholder="Nombre cliente" id="cliente"><br>
+<input placeholder="Teléfono" id="telefono"><br>
+
+<select id="pax">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+</select>
+
+<br>
+
+<input placeholder="Número vuelo" id="vuelo"><br>
+<input placeholder="Número tren" id="tren"><br>
+<input placeholder="Nombre barco" id="barco"><br>
+
+<h2>Precio 53 €</h2>
+
+<button onclick="reservar()">PAGAR Y RESERVAR</button>
+
+<script>
+
+function reservar(){
+
+fetch("/crear-reserva",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+fecha:fecha.value,
+hora:hora.value,
+cliente:cliente.value,
+telefono:telefono.value,
+pax:pax.value,
+origen:origen.value,
+destino:destino.value,
+vuelo:vuelo.value,
+tren:tren.value,
+barco:barco.value,
+precio:53,
+hotel:destino.value
+
+})
+
+})
+
+.then(r=>r.json())
+.then(d=>{
+
+window.location=d.url
+
+})
+
+}
+
+</script>
+
+</body>
+</html>

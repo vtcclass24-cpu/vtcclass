@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Central VTC CLASS</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+table{
+width:95%;
+margin:auto;
+border-collapse:collapse;
+background:white;
+color:black;
+}
+
+th,td{
+padding:8px;
+border:1px solid #ccc;
+}
+
+th{
+background:black;
+color:white;
+}
+
+select,input,button{
+padding:8px;
+margin:6px;
+}
+
+#totales{
+margin-top:20px;
+font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>CENTRAL RESERVAS VTC CLASS</h1>
+
+<select id="filtroHotel" onchange="cargar()">
+
+<option value="">Todos los hoteles</option>
+
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Ramblas</option>
+<option>Hotel Praktik Vinoteca</option>
+
+</select>
+
+<br>
+
+<input type="date" id="filtroDia" onchange="cargar()">
+
+<input type="month" id="filtroMes" onchange="cargar()">
+
+<select id="filtroAno" onchange="cargar()">
+
+<option value="">Todos los años</option>
+
+<option>2024</option>
+<option>2025</option>
+<option>2026</option>
+<option>2027</option>
+<option>2028</option>
+
+</select>
+
+<br>
+
+<button onclick="exportarExcel()">Exportar Excel</button>
+
+<table id="tabla">
+
+<tr>
+
+<th>Día</th>
+<th>Hora</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Cliente</th>
+<th>Teléfono</th>
+<th>Vuelo / Barco / Tren</th>
+<th>Pax</th>
+<th>Precio</th>
+<th>Comisión</th>
+
+</tr>
+
+</table>
+
+<div id="totales">
+
+Facturación total: <span id="totalFacturacion">0</span> €  
+Comisiones hoteles: <span id="totalComision">0</span> €
+
+</div>
+
+<script>
+
+let reservas=[]
+
+async function cargar(){
+
+let res = await fetch("/reservas")
+
+reservas = await res.json()
+
+let hotel = document.getElementById("filtroHotel").value
+let dia = document.getElementById("filtroDia").value
+let mes = document.getElementById("filtroMes").value
+let ano = document.getElementById("filtroAno").value
+
+let tabla=document.getElementById("tabla")
+
+tabla.innerHTML=`
+
+<tr>
+
+<th>Día</th>
+<th>Hora</th>
+<th>Origen</th>
+<th>Destino</th>
+<th>Cliente</th>
+<th>Teléfono</th>
+<th>Vuelo / Barco / Tren</th>
+<th>Pax</th>
+<th>Precio</th>
+<th>Comisión</th>
+
+</tr>
+`
+
+let total=0
+let comision=0
+
+reservas.forEach(r=>{
+
+if(hotel && !r.origen.includes(hotel) && !r.destino.includes(hotel)) return
+
+if(dia && r.fecha!=dia) return
+
+if(mes && !r.fecha.startsWith(mes)) return
+
+if(ano && !r.fecha.startsWith(ano)) return
+
+let extra=r.vuelo || r.barco || r.tren || ""
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+
+`<td>${r.fecha}</td>
+<td>${r.hora}</td>
+<td>${r.origen}</td>
+<td>${r.destino}</td>
+<td>${r.cliente}</td>
+<td>${r.telefono}</td>
+<td>${extra}</td>
+<td>${r.pax}</td>
+<td>${r.precio}€</td>
+<td>${r.comision}€</td>`
+
+tabla.appendChild(tr)
+
+total+=Number(r.precio)
+comision+=Number(r.comision)
+
+})
+
+document.getElementById("totalFacturacion").innerHTML=total
+document.getElementById("totalComision").innerHTML=comision
+
+}
+
+function exportarExcel(){
+
+let csv="Fecha,Hora,Origen,Destino,Cliente,Telefono,Extra,Pax,Precio,Comision\n"
+
+reservas.forEach(r=>{
+
+let extra=r.vuelo || r.barco || r.tren || ""
+
+csv+=
+
+r.fecha+","+
+r.hora+","+
+r.origen+","+
+r.destino+","+
+r.cliente+","+
+r.telefono+","+
+extra+","+
+r.pax+","+
+r.precio+","+
+r.comision+"\n"
+
+})
+
+let blob=new Blob([csv],{type:"text/csv"})
+let url=window.URL.createObjectURL(blob)
+
+let a=document.createElement("a")
+
+a.href=url
+a.download="reservas_vtc_class.csv"
+
+a.click()
+
+}
+
+cargar()
+
+</script>
+
+</body>
+
+</html>
