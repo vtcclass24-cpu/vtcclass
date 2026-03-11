@@ -1,135 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Reserva Transfer</title>
 
 <style>
 
 body{
-background:black;
-color:white;
-font-family:Arial;
-text-align:center
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background-image:url("fondo-praktik-bakery.jpg");
+background-size:cover;
+background-position:center;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
-input,select{
-width:300px;
-padding:10px;
-margin:5px
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.55);
+}
+
+.card{
+
+position:relative;
+width:420px;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 15px 40px rgba(0,0,0,0.6);
+z-index:2;
+
+}
+
+.logo{
+text-align:center;
+margin-bottom:10px;
+}
+
+.logo img{
+width:140px;
+}
+
+.title{
+text-align:center;
+font-size:22px;
+margin-bottom:20px;
+font-weight:bold;
+}
+
+input, select{
+
+width:100%;
+padding:12px;
+margin-top:8px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+
+}
+
+.row{
+display:flex;
+gap:10px;
 }
 
 button{
-padding:12px 30px;
-background:#ffd700;
-border:0;
-font-size:16px
+
+width:100%;
+margin-top:20px;
+padding:14px;
+background:#25c05a;
+border:none;
+border-radius:6px;
+font-size:16px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+button:hover{
+background:#1da34c;
+}
+
+.footer{
+text-align:center;
+margin-top:10px;
+font-size:12px;
+color:#666;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>RESERVA TRANSFER</h1>
+<div class="overlay"></div>
 
-<select id="origen">
+<div class="card">
 
-<option>Aeropuerto</option>
-<option>Terminal de Cruceros</option>
-<option>Estación de Sants</option>
-<option>Hotel Praktik Bakery</option>
-<option>Hotel Praktik Essens</option>
-<option>Hotel Praktik Garden</option>
-<option>Hotel Praktik Ramblas</option>
-<option>Hotel Praktik Vinoteca</option>
+<div class="logo">
+<img src="logo-vtcclass.png">
+</div>
 
+<div class="title">
+VTC CLASS TRANSFERS
+</div>
+
+<input placeholder="Aeropuerto, Puerto, Sants o escribe dirección">
+
+<input value="Hotel Praktik Bakery">
+
+<div class="row">
+
+<input type="date">
+
+<input type="time">
+
+</div>
+
+<select>
+<option>1 pasajero</option>
+<option>2 pasajeros</option>
+<option>3 pasajeros</option>
+<option>4 pasajeros</option>
 </select>
 
-<br>
+<button>
+Continuar
+</button>
 
-<select id="destino">
+<div class="footer">
+VIP Luxury Travel
+</div>
 
-<option>Hotel Praktik Bakery</option>
-<option>Hotel Praktik Essens</option>
-<option>Hotel Praktik Garden</option>
-<option>Hotel Praktik Ramblas</option>
-<option>Hotel Praktik Vinoteca</option>
-<option>Aeropuerto</option>
-<option>Terminal de Cruceros</option>
-<option>Estación de Sants</option>
-
-</select>
-
-<br>
-
-<input type="date" id="fecha"><br>
-<input type="time" id="hora"><br>
-<input placeholder="Nombre cliente" id="cliente"><br>
-<input placeholder="Teléfono" id="telefono"><br>
-
-<select id="pax">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-<option>6</option>
-</select>
-
-<br>
-
-<input placeholder="Número vuelo" id="vuelo"><br>
-<input placeholder="Número tren" id="tren"><br>
-<input placeholder="Nombre barco" id="barco"><br>
-
-<h2>Precio 53 €</h2>
-
-<button onclick="reservar()">PAGAR Y RESERVAR</button>
-
-<script>
-
-function reservar(){
-
-fetch("/crear-reserva",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-fecha:fecha.value,
-hora:hora.value,
-cliente:cliente.value,
-telefono:telefono.value,
-pax:pax.value,
-origen:origen.value,
-destino:destino.value,
-vuelo:vuelo.value,
-tren:tren.value,
-barco:barco.value,
-precio:53,
-hotel:destino.value
-
-})
-
-})
-
-.then(r=>r.json())
-.then(d=>{
-
-window.location=d.url
-
-})
-
-}
-
-</script>
+</div>
 
 </body>
 </html>
