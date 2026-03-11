@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>VTC CLASS CONTROL</title>
+
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
 
 <style>
 
@@ -13,23 +18,24 @@ background:black;
 color:white;
 font-family:Arial;
 text-align:center;
-margin-top:120px;
+padding-top:80px;
 }
 
-button{
+h1{
+font-size:40px;
+margin-bottom:40px;
+}
+
+.menu a{
 display:block;
-margin:20px auto;
-padding:15px 40px;
-font-size:18px;
-background:black;
+margin:15px;
+font-size:22px;
 color:white;
-border:1px solid white;
-cursor:pointer;
-width:260px;
+text-decoration:none;
 }
 
-button:hover{
-background:#111;
+.menu a:hover{
+color:red;
 }
 
 </style>
@@ -40,21 +46,25 @@ background:#111;
 
 <h1>VTC CLASS CONTROL</h1>
 
-<button onclick="location.href='reserva.html'">
-RESERVA AEROPUERTO
-</button>
+<div class="menu">
 
-<button onclick="location.href='praktik-bakery.html'">
-HOTEL PRAKTIK BAKERY
-</button>
+<a href="reserva.html">RESERVA AEROPUERTO</a>
 
-<button onclick="location.href='panel.html'">
-AGENDA
-</button>
+<a href="praktik-bakery.html">HOTEL PRAKTIK BAKERY</a>
 
-<button onclick="location.href='facturacion.html'">
-FACTURACIÓN
-</button>
+<a href="agenda.html">AGENDA</a>
+
+<a href="facturacion.html">FACTURACIÓN</a>
+
+</div>
+
+<script>
+
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("/service-worker.js")
+}
+
+</script>
 
 </body>
 </html>
