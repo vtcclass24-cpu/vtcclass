@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Reserva tu traslado en Barcelona</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Cambria;
+background:url("praktik-hotels-bg.jpg") center center / cover no-repeat fixed;
+}
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.35);
+}
+
+.main{
+position:relative;
+width:420px;
+margin-left:120px;
+margin-top:120px;
+color:white;
+}
+
+.logo img{
+width:180px;
+}
+
+.hero{
+text-align:center;
+}
+
+.hero h1{
+font-size:36px;
+margin-top:20px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+font-weight:bold;
+}
+
+.logoHotel{
+display:none;
+background:white;
+padding:6px;
+border-radius:6px;
+width:200px;
+margin:10px auto 20px auto;
+}
+
+.formulario{
+padding:22px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(4px);
+border-radius:10px;
+}
+
+select,input{
+width:100%;
+padding:10px;
+margin-top:8px;
+border:none;
+border-radius:6px;
+background:rgba(255,255,255,0.85);
+font-family:Cambria;
+}
+
+.row{
+display:flex;
+gap:6px;
+}
+
+.price{
+text-align:center;
+font-size:20px;
+margin-top:12px;
+color:white;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+background:#2ecc71;
+color:white;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.counter{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.counter button{
+width:36px;
+height:36px;
+background:#e5e7eb;
+border:none;
+font-size:22px;
+font-weight:bold;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:6px;
+cursor:pointer;
+}
+
+.counter span{
+font-size:18px;
+font-weight:bold;
+min-width:20px;
+text-align:center;
+color:white;
+}
+
+.edad{
+font-size:16px;
+color:white;
+font-weight:bold;
+}
+
+.vip{
+text-align:center;
+margin-top:6px;
+font-size:13px;
+letter-spacing:3px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="main">
+
+<div class="logo">
+<img src="logo-vtcclass.png">
+</div>
+
+<div class="hero">
+
+<h1>Reserva tu traslado en Barcelona</h1>
+
+<p>Servicio Premium de Transporte Privado</p>
+
+<img id="logoHotel" class="logoHotel" src="logo-bakery.png">
+
+</div>
+
+<div class="formulario">
+
+<select id="origen" onchange="verHotel();calcularPrecio()">
+
+<option value="">Origen</option>
+
+<option>Aeropuerto Barcelona</option>
+<option>Terminal de Cruceros Barcelona</option>
+<option>Estación Barcelona Sants</option>
+
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Rambla</option>
+<option>Hotel Praktik Vinoteca</option>
+
+</select>
+
+<select id="destino" onchange="verHotel();calcularPrecio()">
+
+<option value="">Destino</option>
+
+<option>Aeropuerto Barcelona</option>
+<option>Terminal de Cruceros Barcelona</option>
+<option>Estación Barcelona Sants</option>
+
+<option>Hotel Praktik Bakery</option>
+<option>Hotel Praktik Essens</option>
+<option>Hotel Praktik Garden</option>
+<option>Hotel Praktik Rambla</option>
+<option>Hotel Praktik Vinoteca</option>
+
+</select>
+
+<div class="row">
+
+<input type="date" id="fecha">
+
+<select id="hora">
+
+<option value="">Hora</option>
+
+<script>
+
+for(let h=0;h<24;h++){
+for(let m=0;m<60;m+=10){
+
+let hora=String(h).padStart(2,'0')+":"+String(m).padStart(2,'0')
+document.write("<option>"+hora+"</option>")
+
+}}
+
+</script>
+
+</select>
+
+</div>
+
+<select id="pasajeros" onchange="calcularPrecio()">
+
+<option value="">Número de pasajeros</option>
+<option value="1">1 a 4 pasajeros</option>
+<option value="2">5 a 8 pasajeros</option>
+
+</select>
+
+<div class="row">
+
+<div style="width:50%">
+<label>Maletas grandes</label>
+
+<select id="maletasGrandes">
+
+<script>
+for(let i=0;i<=10;i++){
+document.write("<option>"+i+"</option>")
+}
+</script>
+
+</select>
+
+</div>
+
+<div style="width:50%">
+<label>Maletas pequeñas</label>
+
+<select id="maletasPequenas">
+
+<script>
+for(let i=0;i<=10;i++){
+document.write("<option>"+i+"</option>")
+}
+</script>
+
+</select>
+
+</div>
+
+</div>
+
+<div style="margin-top:12px;font-weight:bold;">
+Sillitas de bebé
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+
+<div>
+Silla bebé<br>
+<span class="edad">0-6 meses</span>
+</div>
+
+<div class="counter">
+<button onclick="restar('s1')">−</button>
+<span id="s1">0</span>
+<button onclick="sumar('s1')">+</button>
+</div>
+
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+
+<div>
+Silla bebé<br>
+<span class="edad">6 meses-3 años</span>
+</div>
+
+<div class="counter">
+<button onclick="restar('s2')">−</button>
+<span id="s2">0</span>
+<button onclick="sumar('s2')">+</button>
+</div>
+
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+
+<div>
+Asiento infantil<br>
+<span class="edad">3-12 años</span>
+</div>
+
+<div class="counter">
+<button onclick="restar('s3')">−</button>
+<span id="s3">0</span>
+<button onclick="sumar('s3')">+</button>
+</div>
+
+</div>
+
+<div class="price" id="precio">
+Precio --
+</div>
+
+<button onclick="guardarReserva()">
+Continuar
+</button>
+
+<div class="vip">
+VIP LUXURY TRAVEL
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function verHotel(){
+
+let origen=document.getElementById("origen").value
+let destino=document.getElementById("destino").value
+let logo=document.getElementById("logoHotel")
+
+if(origen=="Hotel Praktik Bakery" || destino=="Hotel Praktik Bakery"){
+
+document.body.style.background="url('fondo-praktik-bakery.jpg') center center / cover no-repeat fixed"
+logo.style.display="block"
+
+}else{
+
+document.body.style.background="url('praktik-hotels-bg.jpg') center center / cover no-repeat fixed"
+logo.style.display="none"
+
+}
+
+}
+
+function sumar(id){
+
+let el=document.getElementById(id)
+el.innerText=parseInt(el.innerText)+1
+calcularPrecio()
+
+}
+
+function restar(id){
+
+let el=document.getElementById(id)
+let v=parseInt(el.innerText)
+
+if(v>0){
+el.innerText=v-1
+}
+
+calcularPrecio()
+
+}
+
+function calcularPrecio(){
+
+let origen=document.getElementById("origen").value
+let destino=document.getElementById("destino").value
+let pasajeros=document.getElementById("pasajeros").value
+
+if(origen=="" || destino=="" || pasajeros==""){
+
+document.getElementById("precio").innerHTML="Precio --"
+return
+
+}
+
+let precio=0
+
+if(origen.includes("Aeropuerto") || destino.includes("Aeropuerto")){
+precio=(pasajeros=="1")?65:85
+}
+
+else if(origen.includes("Cruceros") || destino.includes("Cruceros")){
+precio=(pasajeros=="1")?55:75
+}
+
+else if(origen.includes("Sants") || destino.includes("Sants")){
+precio=(pasajeros=="1")?50:70
+}
+
+else{
+precio=(pasajeros=="1")?30:55
+}
+
+let totalSillas=
+parseInt(document.getElementById("s1").innerText)+
+parseInt(document.getElementById("s2").innerText)+
+parseInt(document.getElementById("s3").innerText)
+
+precio=precio+(totalSillas*5)
+
+document.getElementById("precio").innerHTML="Precio "+precio+" €"
+
+localStorage.setItem("precio",precio)
+
+}
+
+function guardarReserva(){
+
+localStorage.setItem("origen",document.getElementById("origen").value)
+localStorage.setItem("destino",document.getElementById("destino").value)
+localStorage.setItem("fecha",document.getElementById("fecha").value)
+localStorage.setItem("hora",document.getElementById("hora").value)
+localStorage.setItem("pasajeros",document.getElementById("pasajeros").value)
+localStorage.setItem("maletasGrandes",document.getElementById("maletasGrandes").value)
+localStorage.setItem("maletasPequenas",document.getElementById("maletasPequenas").value)
+
+window.location.href="agenda.html"
+
+}
+
+</script>
+
+</body>
+</html>
